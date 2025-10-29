@@ -194,3 +194,7 @@ Core Principles:
   <a href="https://github.com/Andrew-Davis-Ai-portfolio?tab=repositories"><b>🚀 Follow for updates</b></a> •
   <a href="#roadmap"><b>🗺️ Roadmap</b></a>
 </p>
+<p align="center">
+  Built with ♟️ + 🔥 by <b>Commander Flame</b>
+  <br>© 2025 Flame Division — All Systems Operational
+</p>
