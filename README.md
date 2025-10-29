@@ -13,22 +13,7 @@ Each move represents a **strategic business decision**, and each defeat provides
 **Goal:**  
 Transform traditional business planning into an interactive feedback loop powered by artificial intelligence, strategy, and gamified learning.
 
----
-## 💀 Failure AI — The Final Boss
-
-> “Failure isn’t an enemy — it’s a mirror. Every mistake teaches the system how to win smarter.”
-
-**Role:**  
-Failure AI is the adaptive opponent that learns from every player decision.  
-Each defeat generates data — refining the entrepreneur’s logic, risk tolerance, and execution pattern.  
-Every battle with Failure builds better systems.
-
-**Mechanics:**  
-- ♟ **Defeat = Diagnostic Data** — Every mistake reveals a weak link.  
-- ♜ **Adjustment = Refined Architecture** — Fix it, rebuild it, test it again.  
-- ♛ **Victory = Implementation Ready** — When you beat Failure AI, your business design is simulation-verified for deployment.
-
-<p align="center">
+---<p align="center">
   <img src="https://raw.githubusercontent.com/Andrew-Davis-Ai-portfolio/Project-Checkmate-System/main/Failure_AI_Boss.png" 
   alt="Failure AI — Final Boss" width="100%">
 </p>
