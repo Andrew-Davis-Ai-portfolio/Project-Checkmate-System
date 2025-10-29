@@ -95,3 +95,8 @@ Core Principles:
 	•	♟ Strategy = Awareness — The understanding of moves beyond the board.
 	•	⚙️ System = Alignment — Every piece moves with purpose and order.
 	•	🔥 Mastery = Proof — Success isn’t a trophy, it’s repeatability under pressure.
+<p align="center">
+  <img src="Project_Checkmate_System_Banner.png" width="100%">
+  <br>
+  <img src="Failure_AI_Boss.png" width="100%">
+</p>
