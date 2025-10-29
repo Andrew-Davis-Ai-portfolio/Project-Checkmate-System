@@ -200,7 +200,50 @@ Core Principles:
 </p>
 
 ---
+---
 
+## 👁 FAILURE AI — The Cold Market Executioner  
+*“Markets do not negotiate.”*
+
+In **Project CHECKMATE: Business Strategy AI**, FAILURE AI is the shadow judge of every decision.  
+He does not appear at the beginning of the game.  
+He materializes when you make a **high-risk or unsustainable business move**.
+
+He represents:
+- Market pressure  
+- Competition  
+- Customer rejection  
+- Economic consequences  
+
+When triggered, he:
+1️⃣ Takes a tactical move on your board (representing real-world business loss)  
+2️⃣ Explains the failure in one unforgiving sentence  
+3️⃣ Forces a correction before your next turn  
+
+---
+
+### 🔥 Trigger Events  
+| Business Decision Error | Game Penalty | FAILURE AI Verdict |
+|------------------------|--------------|-------------------|
+| Scaling too early | Center control lost | “Growth without demand is collapse.” |
+| Overspending | Major piece sacrificed | “Burn rate burns kings.” |
+| Undefined target audience | Pawn isolation | “Confusion is expensive.” |
+| Ego-based decisions | Knight removed | “Pride doesn’t pay payroll.” |
+| Ignoring analytics | King forced to move | “Blind business dies first.” |
+
+---
+
+### 🏆 Win Condition:  
+You must defeat FAILURE AI **at least once** during the campaign.  
+If you do — your business plan is **deploy-ready**.  
+If not — iterate and improve.
+
+---
+
+> **He doesn’t destroy dreams.  
+> He validates those that survive.**
+
+---
 ## 🤝 Contributions
 
 Have ideas to improve the system? PRs and suggestions are welcome.
