@@ -1,7 +1,6 @@
 ![Project Checkmate System Banner](./6783D8C4-65F4-47C8-AE18-D797335F7788.png)
 ![Project Checkmate System Banner](your-image.png)
 
-<p align="center">
   <a href="https://github.com/Andrew-Davis-Ai-portfolio/Project-Checkmate-System/releases/latest">
     <img src="https://img.shields.io/github/v/release/Andrew-Davis-Ai-portfolio/Project-Checkmate-System?color=gold&label=Launch%20Version&style=for-the-badge" alt="Latest Release">
   </a>
