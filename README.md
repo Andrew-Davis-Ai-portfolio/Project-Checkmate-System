@@ -7,7 +7,8 @@
 </p>
 
 ---
-
+# 🏁 Project Checkmate System
+> “Every move is a decision. Every defeat is data. Every victory is a system.” ⚙️🔥
 ## 🧠 Overview
 **Project Checkmate System** is an **AI-driven business simulation game** where entrepreneurs play chess against the ultimate opponent — **Failure**.  
 Each move represents a **strategic business decision**, and every defeat provides **data-driven feedback** to refine your model until it achieves real-world viability.
