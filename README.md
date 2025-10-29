@@ -200,7 +200,6 @@ Core Principles:
 </p>
 
 ---
----
 
 ## 👁 FAILURE AI — The Cold Market Executioner  
 *“Markets do not negotiate.”*
