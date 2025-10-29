@@ -57,7 +57,7 @@ Each successful decision sequence creates a verified business framework — an o
 - 🔥 **Mastery = Proof** — Success isn’t a trophy; it’s repeatability under pressure.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Andrew-Davis-Ai-portfolio/Project-Checkmate-System/main/Victory_Protocol_Seal.png" alt="Victory Protocol Seal" width="100%">
+  <img src="https://raw.githubusercontent.com/Andrew-Davis-Ai-portfolio/Project-Checkmate-System/main/BCE2F60A-A1A4-4357-BAD2-736997D587E8.png" alt="Victory Protocol Seal" width="70%">
 </p>
 
 ---
