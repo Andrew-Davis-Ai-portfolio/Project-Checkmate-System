@@ -170,3 +170,27 @@ Core Principles:
   <br>
   <img src="https://raw.githubusercontent.com/Andrew-Davis-Ai-portfolio/Project-Checkmate-System/main/A39D6B20-E133-47FC-AC09-3DB48AB38680.png" alt="Failure AI — The Final Boss" width="100%">
 </p>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Andrew-Davis-Ai-portfolio/Project-Checkmate-System/main/6783D8C4-65F4-47C8-AE18-D797335F7788.png" alt="Project Checkmate System Banner" width="100%">
+</p>
+
+<p align="center">
+  <a href="https://github.com/Andrew-Davis-Ai-portfolio/Project-Checkmate-System/stargazers">
+    <img src="https://img.shields.io/github/stars/Andrew-Davis-Ai-portfolio/Project-Checkmate-System?style=social" alt="GitHub stars">
+  </a>
+  <a href="https://github.com/Andrew-Davis-Ai-portfolio/Project-Checkmate-System/forks">
+    <img src="https://img.shields.io/github/forks/Andrew-Davis-Ai-portfolio/Project-Checkmate-System?style=social" alt="GitHub forks">
+  </a>
+  <a href="https://github.com/Andrew-Davis-Ai-portfolio/Project-Checkmate-System/issues">
+    <img src="https://img.shields.io/github/issues/Andrew-Davis-Ai-portfolio/Project-Checkmate-System" alt="GitHub issues">
+  </a>
+  <a href="https://github.com/Andrew-Davis-Ai-portfolio/Project-Checkmate-System/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/Andrew-Davis-Ai-portfolio/Project-Checkmate-System" alt="License">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Andrew-Davis-Ai-portfolio/Project-Checkmate-System/stargazers"><b>⭐ Star this project</b></a> •
+  <a href="https://github.com/Andrew-Davis-Ai-portfolio?tab=repositories"><b>🚀 Follow for updates</b></a> •
+  <a href="#roadmap"><b>🗺️ Roadmap</b></a>
+</p>
