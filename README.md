@@ -1,4 +1,4 @@
-![Flame Chessboard Banner](assets/visuals/Flame-Chessboard-Promo-v1.png)
+![Project Checkmate System Banner](./6783D8C4-65F4-47C8-AE18-D797335F7788.png)
 # 🏁 Project Checkmate System
 > “Every move is a decision. Every defeat is data. Every victory is a system.” ⚙️🔥
 ## 🧠 Overview
