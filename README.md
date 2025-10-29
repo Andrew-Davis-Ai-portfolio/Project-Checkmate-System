@@ -195,6 +195,19 @@ Core Principles:
   <a href="#roadmap"><b>🗺️ Roadmap</b></a>
 </p>
 <p align="center">
-  Built with ♟️ + 🔥 by <b>Commander Flame</b>
-  <br>© 2025 Flame Division — All Systems Operational
+  Built with ♟️ + 🔥 by <b>Commander Flame</b><br>
+  © 2025 Flame Division — All Systems Operational
 </p>
+
+---
+
+## 🤝 Contributions
+
+Have ideas to improve the system? PRs and suggestions are welcome.
+Let’s make Failure the greatest teacher — together.
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License — see the <a href="./LICENSE">LICENSE</a> file for details.
