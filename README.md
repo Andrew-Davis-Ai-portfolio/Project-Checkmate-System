@@ -13,9 +13,11 @@ Each move represents a **strategic business decision**, and each defeat provides
 **Goal:**  
 Transform traditional business planning into an interactive feedback loop powered by artificial intelligence, strategy, and gamified learning.
 
----<p align="center">
-  <img src="https://raw.githubusercontent.com/Andrew-Davis-Ai-portfolio/Project-Checkmate-System/main/Failure_AI_Boss.png" 
-  alt="Failure AI — Final Boss" width="100%">
+---
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Andrew-Davis-Ai-portfolio/Project-Checkmate-System/main/A39D6B20-E133-47FC-AC09-3DB48AB38680.png" 
+  alt="Failure AI — The Final Boss" width="100%">
 </p>
 ## 🧩 Core Gameplay Loop  
 
