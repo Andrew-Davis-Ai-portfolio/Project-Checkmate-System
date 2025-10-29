@@ -96,7 +96,7 @@ Core Principles:
 	•	⚙️ System = Alignment — Every piece moves with purpose and order.
 	•	🔥 Mastery = Proof — Success isn’t a trophy, it’s repeatability under pressure.
 <p align="center">
-  <img src="Project_Checkmate_System_Banner.png" width="100%">
+  <img src="https://raw.githubusercontent.com/Andrew-Davis-Ai-portfolio/Project-Checkmate-System/main/6783D8C4-65F4-47C8-AE18-D797335F7788.png" alt="Project Checkmate System Banner" width="100%">
   <br>
-  <img src="Failure_AI_Boss.png" width="100%">
+  <img src="https://raw.githubusercontent.com/Andrew-Davis-Ai-portfolio/Project-Checkmate-System/main/A39D6B20-E133-47FC-AC09-3DB48AB38680.png" alt="Failure AI — The Final Boss" width="100%">
 </p>
