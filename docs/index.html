@@ -102,6 +102,14 @@
       font-size: 0.9rem;
       color: var(--text-soft);
       margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .subtitle-secondary {
+      display: block;
+      font-size: 0.8rem;
+      color: rgba(155,165,205,0.96);
+      margin-top: 3px;
     }
 
     .hud {
@@ -148,8 +156,6 @@
         grid-template-columns: minmax(0,1fr);
       }
     }
-
-    /* Left: Board / pieces / actions */
 
     .board-card {
       background: radial-gradient(circle at top, #181e32 0, #101624 62%, #0a0f1d 100%);
@@ -268,13 +274,7 @@
     .piece-status {
       font-size: 0.72rem;
       margin-top: 2px;
-      color: #37de92;
-    }
-
-    .piece-status span {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
+      min-height: 14px;
     }
 
     .status-dot {
@@ -283,6 +283,7 @@
       border-radius: 999px;
       background: #37de92;
       box-shadow: 0 0 8px rgba(55,222,146,0.8);
+      display: inline-block;
     }
 
     .piece.captured {
@@ -348,6 +349,8 @@
       border: 1px solid rgba(145,158,203,0.6);
       background: linear-gradient(135deg, rgba(16,22,42,0.96), rgba(8,12,24,0.96));
       color: var(--text);
+      padding: 9px 16px;
+      font-weight: 600;
     }
 
     .btn-strategy span {
@@ -358,7 +361,7 @@
     }
 
     .btn-strategy strong {
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .btn-strategy:hover {
@@ -393,8 +396,6 @@
       border-color: rgba(142,158,255,0.95);
       box-shadow: 0 0 0 1px rgba(142,158,255,0.55);
     }
-
-    /* Right: Log / lessons */
 
     .side-card {
       background: radial-gradient(circle at top, #171c32 0, #101623 58%, #090d19 100%);
@@ -488,8 +489,6 @@
       color: var(--accent);
       font-weight: 500;
     }
-
-    /* Modal */
 
     .modal-backdrop {
       position: fixed;
@@ -616,7 +615,6 @@
       box-shadow: 0 0 0 1px rgba(245,181,68,0.7), 0 10px 24px rgba(0,0,0,0.8);
     }
 
-    /* Demo complete badge inside modal */
     .demo-complete {
       font-size: 0.78rem;
       color: rgba(186,196,233,0.98);
@@ -640,6 +638,9 @@
           </h1>
           <p class="subtitle">
             3–5 moves. Every loss teaches a business failure pattern. This is a free-play demo — not the full engine.
+            <span class="subtitle-secondary">
+              This simulation reflects common strategic failure patterns in early-stage and scaling companies.
+            </span>
           </p>
         </div>
         <div class="hud">
@@ -648,13 +649,12 @@
             <span>Mode: <strong>Single-Player Strategy</strong></span>
           </div>
           <div class="hud-pill">
-            <span>Objective: <strong>Survive the opening without losing your King</strong></span>
+            <span>Objective: <strong>Survive the opening without sacrificing runway or ops integrity</strong></span>
           </div>
         </div>
       </header>
 
       <section class="layout">
-        <!-- LEFT: PIECES + ACTIONS -->
         <section class="board-card">
           <div class="board-header">
             <h2>Your Company — Battle Chess Layout</h2>
@@ -664,12 +664,9 @@
             </div>
           </div>
 
-          <!-- Pieces -->
           <div class="piece-grid" id="pieceGrid">
-            <!-- Pieces inserted by JS -->
           </div>
 
-          <!-- Actions -->
           <div class="actions">
             <div class="actions-label">Choose your next strategic move</div>
             <div class="strategy-row">
@@ -693,16 +690,13 @@
           </div>
         </section>
 
-        <!-- RIGHT: LOG + META -->
         <aside class="side-card">
           <div class="side-header">
             <h3>Move Log & Failure Feed</h3>
             <span class="side-tag">Every capture = data</span>
           </div>
 
-          <div id="log" class="log">
-            <!-- Log entries inserted by JS -->
-          </div>
+          <div id="log" class="log"></div>
 
           <div class="side-footer">
             <span>
@@ -717,7 +711,6 @@
     </div>
   </main>
 
-  <!-- MODAL: LOSS / LESSON -->
   <div class="modal-backdrop" id="lessonModal">
     <div class="modal">
       <div class="modal-inner">
@@ -746,10 +739,6 @@
   </div>
 
   <script>
-    // -------------------------------
-    // PROJECT CHECKMATE — DEMO ENGINE
-    // -------------------------------
-
     const maxTurns = 5;
 
     const piecesConfig = [
@@ -757,7 +746,7 @@
         id: "king",
         icon: "♔",
         name: "King",
-        role: "Vision + Cash Runway",
+        role: "Vision & Runway",
         tag: "Non-Negotiable Core",
         lesson: "Lose your King and the game ends — in business terms, this is your cash runway and core leadership. No matter how exciting the opportunity, you never stake the survival of the company on a single move.",
       },
@@ -773,7 +762,7 @@
         id: "rook",
         icon: "♖",
         name: "Rook",
-        role: "Systems + Infrastructure",
+        role: "Systems & Infra",
         tag: "Pipelines",
         lesson: "The Rook represents systems, pipelines, and infrastructure. Scaling without this piece means chaos: handoffs break, data is wrong, and your team starts fighting fires instead of building.",
       },
@@ -781,7 +770,7 @@
         id: "bishop",
         icon: "♗",
         name: "Bishop",
-        role: "Strategy + Advisors",
+        role: "Strategy & Advisors",
         tag: "Guidance",
         lesson: "The Bishop is strategic guidance and advisory perspective. Without it, every move is emotional — not informed — and you learn from damage instead of direction.",
       },
@@ -789,7 +778,7 @@
         id: "knight",
         icon: "♘",
         name: "Knight",
-        role: "Innovation + Smart Risk",
+        role: "Innovation & Smart Risk",
         tag: "R&D",
         lesson: "The Knight is innovation and calculated risk. Lose this and you slowly become obsolete — safe in the short term, but invisible long-term.",
       },
@@ -797,14 +786,12 @@
         id: "pawn",
         icon: "♙",
         name: "Pawn",
-        role: "Frontline Offers + Staff",
+        role: "Frontline & Staff",
         tag: "Execution Edge",
         lesson: "Pawns are your frontline: entry-level staff, low-ticket offers, and early bets. You can afford to lose some — but if you burn them recklessly, morale and reputation crater.",
       },
     ];
 
-    // Strategy tables: which piece gets stressed when you choose a move.
-    // Order = priority — we pick from available pieces in this list.
     const strategyTables = {
       aggressive: {
         label: "Aggressive Expansion",
@@ -905,7 +892,7 @@
           <div class="piece-status">
             ${
               piece.alive
-                ? `<span><span class="status-dot"></span> Active on board</span>`
+                ? `<span class="status-dot"></span>`
                 : `<span><span class="status-dot"></span> Captured</span>`
             }
           </div>
@@ -941,7 +928,7 @@
       logEl.innerHTML = "";
       log(
         `<strong>Board initialized.</strong> All six pieces are active. 
-        Your job: survive the opening without sacrificing the wrong core.`,
+        Your job: survive the opening without sacrificing the core.`,
         { turn: 0 }
       );
       log(
@@ -998,11 +985,9 @@
       const table = strategyTables[strategyKey];
       if (!table) return null;
 
-      // Filter priorities to only alive pieces
       const available = table.priorities.filter((id) => state.pieces[id].alive);
       if (available.length === 0) return null;
 
-      // Randomly pick one alive candidate
       const targetId = available[Math.floor(Math.random() * available.length)];
       const piece = state.pieces[targetId];
 
@@ -1012,7 +997,6 @@
     }
 
     function checkGameOver() {
-      // End conditions: max turns reached or King captured
       const kingAlive = state.pieces.king.alive;
       const turnsDone = state.turn > state.maxTurns;
 
@@ -1051,14 +1035,11 @@
         { turn: state.turn }
       );
 
-      // Temporarily prevent double clicks until resolution
       setButtonsEnabled(false);
 
-      // Decide which piece is captured by this choice
       const outcome = chooseCapture(strategyKey);
 
       if (!outcome) {
-        // No pieces left somehow
         log(
           "No more pieces available to capture — the board is effectively empty.",
           { danger: true }
@@ -1070,13 +1051,11 @@
 
       const { piece, misplay, strategyLabel } = outcome;
 
-      // If piece is already in lostPieces, skip (defensive; should not happen)
       if (!piece.alive) {
         setButtonsEnabled(true);
         return;
       }
 
-      // Mark piece as captured
       piece.alive = false;
       state.lostPieces.push(piece);
 
@@ -1087,10 +1066,8 @@
         { danger: true, turn: state.turn }
       );
 
-      // Check if game over now (after capture)
       const gameStatus = checkGameOver();
 
-      // Open modal with lesson
       openModal({
         title: piece.name + " has been removed from the board",
         icon: piece.icon,
@@ -1102,7 +1079,6 @@
         demoSummary: gameStatus.summaryHTML
       });
 
-      // Advance turn counter if not already beyond max
       if (state.turn <= state.maxTurns) {
         state.turn += 1;
         turnLabelEl.textContent = state.turn;
@@ -1116,10 +1092,6 @@
       setButtonsEnabled(true);
     }
 
-    // -------------------
-    // EVENT BINDINGS
-    // -------------------
-
     btnAggressive.addEventListener("click", () => handleStrategyClick("aggressive"));
     btnDefensive.addEventListener("click", () => handleStrategyClick("defensive"));
     btnSpeculative.addEventListener("click", () => handleStrategyClick("speculative"));
@@ -1132,7 +1104,6 @@
       }
     });
 
-    // ---- INIT ----
     initState();
     renderPieces();
     logIntro();
