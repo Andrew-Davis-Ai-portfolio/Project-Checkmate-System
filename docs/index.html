@@ -73,7 +73,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 12px 18px;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       margin-bottom: 18px;
     }
@@ -114,11 +114,18 @@
 
     .hud {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
       font-size: 0.8rem;
       color: var(--text-soft);
-      align-items: center;
+    }
+
+    .hud-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
     }
 
     .hud-pill {
@@ -145,6 +152,36 @@
       box-shadow: 0 0 8px rgba(63,225,255,0.8);
     }
 
+    .btn-tts {
+      appearance: none;
+      border-radius: 999px;
+      border: 1px solid rgba(245,181,68,0.9);
+      background: radial-gradient(circle at top, rgba(245,181,68,0.16) 0, rgba(8,10,18,0.98) 65%);
+      color: var(--accent);
+      font-size: 0.78rem;
+      padding: 6px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: box-shadow var(--transition-fast), transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .btn-tts span.icon {
+      font-size: 0.9rem;
+    }
+
+    .btn-tts:hover {
+      box-shadow: 0 0 0 1px rgba(245,181,68,0.7), 0 8px 20px rgba(0,0,0,0.85);
+      transform: translateY(-1px);
+      background: radial-gradient(circle at top, rgba(245,181,68,0.22) 0, rgba(8,10,18,0.98) 65%);
+    }
+
+    .btn-tts:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.85);
+    }
+
     .layout {
       display: grid;
       grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr);
@@ -154,6 +191,14 @@
     @media (max-width: 900px) {
       .layout {
         grid-template-columns: minmax(0,1fr);
+      }
+
+      .hud {
+        align-items: flex-start;
+      }
+
+      .hud-row {
+        justify-content: flex-start;
       }
     }
 
@@ -609,6 +654,8 @@
       color: var(--accent);
       font-size: 0.78rem;
       padding: 7px 16px;
+      cursor: pointer;
+      border-radius: 999px;
     }
 
     .btn-modal:hover {
@@ -644,13 +691,19 @@
           </p>
         </div>
         <div class="hud">
-          <div class="hud-pill">
-            <div class="hud-dot"></div>
-            <span>Mode: <strong>Single-Player Strategy</strong></span>
+          <div class="hud-row">
+            <div class="hud-pill">
+              <div class="hud-dot"></div>
+              <span>Mode: <strong>Single-Player Strategy</strong></span>
+            </div>
+            <div class="hud-pill">
+              <span>Objective: <strong>Survive the opening without sacrificing runway or ops integrity</strong></span>
+            </div>
           </div>
-          <div class="hud-pill">
-            <span>Objective: <strong>Survive the opening without sacrificing runway or ops integrity</strong></span>
-          </div>
+          <button class="btn-tts" id="btnTtsBoard" type="button">
+            <span class="icon">🔊</span>
+            <span>Board Voice Briefing</span>
+          </button>
         </div>
       </header>
 
@@ -664,8 +717,7 @@
             </div>
           </div>
 
-          <div class="piece-grid" id="pieceGrid">
-          </div>
+          <div class="piece-grid" id="pieceGrid"></div>
 
           <div class="actions">
             <div class="actions-label">Choose your next strategic move</div>
@@ -730,7 +782,7 @@
           <span class="hint" id="modalHint">
             Close this panel to continue the demo. You have limited moves.
           </span>
-          <button class="btn btn-modal" id="modalCloseBtn" type="button">
+          <button class="btn-modal" id="modalCloseBtn" type="button">
             Understood — back to the board
           </button>
         </div>
@@ -846,6 +898,7 @@
     const btnDefensive = document.getElementById("btnDefensive");
     const btnSpeculative = document.getElementById("btnSpeculative");
     const btnReset = document.getElementById("btnReset");
+    const btnTtsBoard = document.getElementById("btnTtsBoard");
 
     const lessonModal = document.getElementById("lessonModal");
     const modalTitle = document.getElementById("modalTitle");
@@ -855,6 +908,39 @@
     const modalCloseBtn = document.getElementById("modalCloseBtn");
     const modalHint = document.getElementById("modalHint");
     const demoCompleteBlock = document.getElementById("demoCompleteBlock");
+
+    // ---- TTS HELPERS ----
+    function canSpeak() {
+      return typeof window !== "undefined" && "speechSynthesis" in window;
+    }
+
+    function speakText(text) {
+      if (!canSpeak()) {
+        console.warn("Speech synthesis not supported in this browser.");
+        return;
+      }
+      const synth = window.speechSynthesis;
+      try {
+        synth.cancel();
+      } catch(e) {
+        // ignore
+      }
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "en-US";
+      utter.rate = 1.0;
+      utter.pitch = 1.0;
+      synth.speak(utter);
+    }
+
+    function buildBoardBriefing() {
+      let intro = "Project Checkmate. Board briefing. Your company is represented as a battle chess layout.";
+      const pieceLines = piecesConfig.map(p =>
+        `${p.name}. Role: ${p.role}. Tag: ${p.tag}.`
+      );
+      return intro + " " + pieceLines.join(" ");
+    }
+
+    // ---------------- CORE ENGINE ----------------
 
     function initState() {
       state = {
@@ -972,6 +1058,10 @@
       }
 
       lessonModal.classList.add("active");
+
+      // Voice: read misplay + lesson
+      const spoken = `${pieceName} captured. ${misplay} Strategic lesson: ${lesson}`;
+      speakText(spoken);
     }
 
     function closeModal() {
@@ -1086,12 +1176,16 @@
     }
 
     function resetDemo() {
+      if (canSpeak()) {
+        try { window.speechSynthesis.cancel(); } catch(e) {}
+      }
       initState();
       renderPieces();
       logIntro();
       setButtonsEnabled(true);
     }
 
+    // ---- EVENT BINDINGS ----
     btnAggressive.addEventListener("click", () => handleStrategyClick("aggressive"));
     btnDefensive.addEventListener("click", () => handleStrategyClick("defensive"));
     btnSpeculative.addEventListener("click", () => handleStrategyClick("speculative"));
@@ -1104,6 +1198,12 @@
       }
     });
 
+    btnTtsBoard.addEventListener("click", () => {
+      const text = buildBoardBriefing();
+      speakText(text);
+    });
+
+    // ---- INIT ----
     initState();
     renderPieces();
     logIntro();
