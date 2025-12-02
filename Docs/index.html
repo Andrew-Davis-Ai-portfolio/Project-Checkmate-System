@@ -1,0 +1,1141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Project Checkmate — Strategy Demo v1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root {
+      --bg: #05070c;
+      --bg-alt: #0b1018;
+      --card: #111624;
+      --card-soft: #151b2b;
+      --accent: #f5b544;
+      --accent-soft: rgba(245,181,68,0.16);
+      --danger: #ff3366;
+      --text: #f7f7ff;
+      --text-soft: #9fa6c0;
+      --border: #232b3d;
+      --shadow-soft: 0 18px 45px rgba(0,0,0,0.65);
+      --radius-lg: 18px;
+      --radius-sm: 10px;
+      --transition-fast: 0.18s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #101424 0, #05070c 52%, #020309 100%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 1120px;
+      background: linear-gradient(145deg, rgba(10,14,26,0.96), rgba(6,8,16,1));
+      border-radius: 24px;
+      border: 1px solid rgba(245,181,68,0.22);
+      box-shadow: var(--shadow-soft);
+      padding: 24px 22px 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shell::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 20% -20%, rgba(245,181,68,0.08) 0, transparent 55%),
+        radial-gradient(circle at 120% 40%, rgba(108,249,255,0.08) 0, transparent 60%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .shell-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .title-block h1 {
+      font-size: clamp(1.5rem, 1.4rem + 0.8vw, 1.9rem);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .title-badge {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(245,181,68,0.7);
+      background: rgba(6,8,16,0.9);
+      color: var(--accent);
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--text-soft);
+      margin-top: 4px;
+    }
+
+    .hud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      align-items: center;
+    }
+
+    .hud-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(128,143,189,0.45);
+      background: linear-gradient(135deg, rgba(13,19,32,0.9), rgba(7,10,19,0.95));
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .hud-pill strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .hud-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #3fe1ff;
+      box-shadow: 0 0 8px rgba(63,225,255,0.8);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    /* Left: Board / pieces / actions */
+
+    .board-card {
+      background: radial-gradient(circle at top, #181e32 0, #101624 62%, #0a0f1d 100%);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 16px 14px 16px;
+      box-shadow: 0 14px 28px rgba(0,0,0,0.45);
+    }
+
+    .board-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .board-header h2 {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(184,189,199,0.96);
+    }
+
+    .turn-counter {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .turn-counter strong {
+      color: var(--accent);
+    }
+
+    .piece-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 620px) {
+      .piece-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .piece {
+      position: relative;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(148,162,199,0.35);
+      background: linear-gradient(145deg, #151b2b, #111624);
+      padding: 10px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-height: 76px;
+      overflow: hidden;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast), opacity var(--transition-fast), filter var(--transition-fast);
+    }
+
+    .piece::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at -10% -10%, rgba(245,181,68,0.12) 0, transparent 55%),
+        radial-gradient(circle at 120% 120%, rgba(63,225,255,0.08) 0, transparent 55%);
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+      pointer-events: none;
+    }
+
+    .piece.alive:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 32px rgba(0,0,0,0.6);
+      border-color: rgba(245,181,68,0.6);
+    }
+
+    .piece.alive:hover::before {
+      opacity: 1;
+    }
+
+    .piece-icon {
+      font-size: 1.1rem;
+    }
+
+    .piece-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .piece-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .piece-role {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      opacity: 0.9;
+    }
+
+    .piece-tag {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(245,181,68,0.6);
+      color: var(--accent);
+      background: rgba(9,13,24,0.9);
+    }
+
+    .piece-status {
+      font-size: 0.72rem;
+      margin-top: 2px;
+      color: #37de92;
+    }
+
+    .piece-status span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #37de92;
+      box-shadow: 0 0 8px rgba(55,222,146,0.8);
+    }
+
+    .piece.captured {
+      opacity: 0.4;
+      filter: grayscale(0.9);
+      border-style: dashed;
+      border-color: rgba(255,51,102,0.7);
+    }
+
+    .piece.captured .piece-status {
+      color: var(--danger);
+    }
+
+    .piece.captured .status-dot {
+      background: var(--danger);
+      box-shadow: 0 0 8px rgba(255,51,102,0.7);
+    }
+
+    .piece.captured .piece-tag {
+      border-color: rgba(255,51,102,0.75);
+      color: var(--danger);
+    }
+
+    .actions {
+      margin-top: 4px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(145,158,203,0.45);
+      background: radial-gradient(circle at top, rgba(25,33,56,0.96) 0, rgba(12,16,31,0.98) 55%, rgba(9,12,24,1) 100%);
+      padding: 10px 9px 11px;
+    }
+
+    .actions-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(158,167,205,0.95);
+      margin-bottom: 6px;
+    }
+
+    .strategy-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 0;
+      outline: 0;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.8rem;
+      border-radius: 999px;
+      padding: 7px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), opacity var(--transition-fast);
+    }
+
+    .btn-strategy {
+      border: 1px solid rgba(145,158,203,0.6);
+      background: linear-gradient(135deg, rgba(16,22,42,0.96), rgba(8,12,24,0.96));
+      color: var(--text);
+    }
+
+    .btn-strategy span {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.85;
+    }
+
+    .btn-strategy strong {
+      font-weight: 600;
+    }
+
+    .btn-strategy:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.65);
+      border-color: rgba(245,181,68,0.85);
+      background: radial-gradient(circle at top, rgba(245,181,68,0.09) 0, rgba(8,12,24,0.98) 52%);
+    }
+
+    .btn-strategy:active {
+      transform: translateY(0);
+      box-shadow: 0 5px 12px rgba(0,0,0,0.75);
+    }
+
+    .btn.disabled,
+    .btn[disabled] {
+      opacity: 0.35;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .btn-reset {
+      margin-top: 8px;
+      border: 1px solid rgba(92,107,192,0.8);
+      background: linear-gradient(135deg, rgba(9,14,29,0.95), rgba(5,9,19,0.98));
+      color: rgba(193,199,222,0.98);
+      font-size: 0.75rem;
+      padding: 6px 12px;
+    }
+
+    .btn-reset:hover {
+      border-color: rgba(142,158,255,0.95);
+      box-shadow: 0 0 0 1px rgba(142,158,255,0.55);
+    }
+
+    /* Right: Log / lessons */
+
+    .side-card {
+      background: radial-gradient(circle at top, #171c32 0, #101623 58%, #090d19 100%);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 14px 13px 14px;
+      box-shadow: 0 14px 28px rgba(0,0,0,0.45);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 420px;
+    }
+
+    .side-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: baseline;
+    }
+
+    .side-header h3 {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: rgba(184,193,220,0.96);
+    }
+
+    .side-tag {
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(245,181,68,0.7);
+      color: var(--accent);
+      background: rgba(6,8,16,0.96);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .log {
+      flex: 1;
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      border-radius: 12px;
+      border: 1px solid rgba(87,102,155,0.7);
+      background: linear-gradient(145deg, rgba(8,11,23,0.98), rgba(5,8,17,1));
+      padding: 8px 9px;
+      overflow: auto;
+    }
+
+    .log-entry {
+      margin-bottom: 6px;
+      line-height: 1.45;
+    }
+
+    .log-entry strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .log-entry-danger strong {
+      color: var(--danger);
+    }
+
+    .log-entry span.turn-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: rgba(150,160,205,0.9);
+    }
+
+    .log-entry:last-child {
+      margin-bottom: 0;
+    }
+
+    .side-footer {
+      font-size: 0.72rem;
+      color: rgba(151,161,199,0.9);
+      border-top: 1px dashed rgba(82,98,150,0.85);
+      padding-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .side-footer span {
+      opacity: 0.9;
+    }
+
+    .side-footer strong {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* Modal */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(15,21,38,0.94), rgba(3,4,10,0.97));
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      padding: 18px;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal {
+      max-width: 520px;
+      width: 100%;
+      background: radial-gradient(circle at top, #1b2135 0, #101624 60%, #080b16 100%);
+      border-radius: 18px;
+      border: 1px solid rgba(245,181,68,0.85);
+      box-shadow: 0 22px 55px rgba(0,0,0,0.9);
+      padding: 18px 18px 16px;
+      position: relative;
+    }
+
+    .modal::before {
+      content: "";
+      position: absolute;
+      inset: -25%;
+      background:
+        radial-gradient(circle at -10% -10%, rgba(245,181,68,0.2) 0, transparent 60%),
+        radial-gradient(circle at 120% 120%, rgba(63,225,255,0.15) 0, transparent 60%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .modal-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .modal-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(199,211,245,0.95);
+      margin-bottom: 4px;
+    }
+
+    .modal-title {
+      font-size: 1rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-title span {
+      font-size: 1.1rem;
+    }
+
+    .modal-piece {
+      font-size: 0.82rem;
+      color: rgba(177,186,221,0.96);
+      margin-bottom: 8px;
+    }
+
+    .modal-piece strong {
+      color: var(--accent);
+    }
+
+    .modal-body {
+      font-size: 0.8rem;
+      color: rgba(191,199,227,0.96);
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+
+    .modal-body em {
+      color: var(--accent);
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    .modal-lesson-label {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(157,168,215,0.96);
+      margin-bottom: 4px;
+    }
+
+    .modal-lesson {
+      font-size: 0.8rem;
+      color: rgba(225,229,247,0.98);
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .modal-footer .hint {
+      font-size: 0.72rem;
+      color: rgba(169,177,214,0.96);
+    }
+
+    .btn-modal {
+      border: 1px solid rgba(245,181,68,0.9);
+      background: radial-gradient(circle at top, rgba(245,181,68,0.16) 0, rgba(8,10,18,0.98) 65%);
+      color: var(--accent);
+      font-size: 0.78rem;
+      padding: 7px 16px;
+    }
+
+    .btn-modal:hover {
+      box-shadow: 0 0 0 1px rgba(245,181,68,0.7), 0 10px 24px rgba(0,0,0,0.8);
+    }
+
+    /* Demo complete badge inside modal */
+    .demo-complete {
+      font-size: 0.78rem;
+      color: rgba(186,196,233,0.98);
+      margin-bottom: 6px;
+    }
+
+    .demo-complete strong {
+      color: var(--accent);
+    }
+
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="shell-inner">
+      <header>
+        <div class="title-block">
+          <h1>
+            ♟️ PROJECT CHECKMATE
+            <span class="title-badge">Demo Board v1</span>
+          </h1>
+          <p class="subtitle">
+            3–5 moves. Every loss teaches a business failure pattern. This is a free-play demo — not the full engine.
+          </p>
+        </div>
+        <div class="hud">
+          <div class="hud-pill">
+            <div class="hud-dot"></div>
+            <span>Mode: <strong>Single-Player Strategy</strong></span>
+          </div>
+          <div class="hud-pill">
+            <span>Objective: <strong>Survive the opening without losing your King</strong></span>
+          </div>
+        </div>
+      </header>
+
+      <section class="layout">
+        <!-- LEFT: PIECES + ACTIONS -->
+        <section class="board-card">
+          <div class="board-header">
+            <h2>Your Company — Battle Chess Layout</h2>
+            <div class="turn-counter">
+              Turn <strong id="turnLabel">1</strong> / <span id="maxTurnsLabel">5</span> •
+              Lost pieces: <strong id="lostCountLabel">0</strong>
+            </div>
+          </div>
+
+          <!-- Pieces -->
+          <div class="piece-grid" id="pieceGrid">
+            <!-- Pieces inserted by JS -->
+          </div>
+
+          <!-- Actions -->
+          <div class="actions">
+            <div class="actions-label">Choose your next strategic move</div>
+            <div class="strategy-row">
+              <button class="btn btn-strategy" data-strategy="aggressive" id="btnAggressive">
+                <strong>Aggressive Expansion</strong>
+                <span>High risk · high pressure</span>
+              </button>
+              <button class="btn btn-strategy" data-strategy="defensive" id="btnDefensive">
+                <strong>Defensive Consolidation</strong>
+                <span>Protect runway</span>
+              </button>
+              <button class="btn btn-strategy" data-strategy="speculative" id="btnSpeculative">
+                <strong>Speculative Bet</strong>
+                <span>Innovation gamble</span>
+              </button>
+            </div>
+
+            <button class="btn btn-reset" id="btnReset" type="button">
+              ⟳ Reset Demo Board
+            </button>
+          </div>
+        </section>
+
+        <!-- RIGHT: LOG + META -->
+        <aside class="side-card">
+          <div class="side-header">
+            <h3>Move Log & Failure Feed</h3>
+            <span class="side-tag">Every capture = data</span>
+          </div>
+
+          <div id="log" class="log">
+            <!-- Log entries inserted by JS -->
+          </div>
+
+          <div class="side-footer">
+            <span>
+              In the full version, an AI engine will adapt to your patterns and escalate counter-moves.
+            </span>
+            <span>
+              <strong>Project Checkmate GPT</strong> runs in the background as the strategist.
+            </span>
+          </div>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <!-- MODAL: LOSS / LESSON -->
+  <div class="modal-backdrop" id="lessonModal">
+    <div class="modal">
+      <div class="modal-inner">
+        <div class="modal-label">Capture Event Logged</div>
+        <div class="modal-title" id="modalTitle">
+          <span>♟️</span>
+          <span>Piece Lost</span>
+        </div>
+        <div class="modal-piece" id="modalPieceInfo"></div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-lesson-label">Strategic Lesson</div>
+        <div class="modal-lesson" id="modalLesson"></div>
+
+        <div id="demoCompleteBlock" class="demo-complete" style="display:none;"></div>
+
+        <div class="modal-footer">
+          <span class="hint" id="modalHint">
+            Close this panel to continue the demo. You have limited moves.
+          </span>
+          <button class="btn btn-modal" id="modalCloseBtn" type="button">
+            Understood — back to the board
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // -------------------------------
+    // PROJECT CHECKMATE — DEMO ENGINE
+    // -------------------------------
+
+    const maxTurns = 5;
+
+    const piecesConfig = [
+      {
+        id: "king",
+        icon: "♔",
+        name: "King",
+        role: "Vision + Cash Runway",
+        tag: "Non-Negotiable Core",
+        lesson: "Lose your King and the game ends — in business terms, this is your cash runway and core leadership. No matter how exciting the opportunity, you never stake the survival of the company on a single move.",
+      },
+      {
+        id: "queen",
+        icon: "♕",
+        name: "Queen",
+        role: "Execution Engine",
+        tag: "Ops / Delivery",
+        lesson: "The Queen is your operations and delivery muscle. When Ops collapses, even great ideas die in customer complaints and churn.",
+      },
+      {
+        id: "rook",
+        icon: "♖",
+        name: "Rook",
+        role: "Systems + Infrastructure",
+        tag: "Pipelines",
+        lesson: "The Rook represents systems, pipelines, and infrastructure. Scaling without this piece means chaos: handoffs break, data is wrong, and your team starts fighting fires instead of building.",
+      },
+      {
+        id: "bishop",
+        icon: "♗",
+        name: "Bishop",
+        role: "Strategy + Advisors",
+        tag: "Guidance",
+        lesson: "The Bishop is strategic guidance and advisory perspective. Without it, every move is emotional — not informed — and you learn from damage instead of direction.",
+      },
+      {
+        id: "knight",
+        icon: "♘",
+        name: "Knight",
+        role: "Innovation + Smart Risk",
+        tag: "R&D",
+        lesson: "The Knight is innovation and calculated risk. Lose this and you slowly become obsolete — safe in the short term, but invisible long-term.",
+      },
+      {
+        id: "pawn",
+        icon: "♙",
+        name: "Pawn",
+        role: "Frontline Offers + Staff",
+        tag: "Execution Edge",
+        lesson: "Pawns are your frontline: entry-level staff, low-ticket offers, and early bets. You can afford to lose some — but if you burn them recklessly, morale and reputation crater.",
+      },
+    ];
+
+    // Strategy tables: which piece gets stressed when you choose a move.
+    // Order = priority — we pick from available pieces in this list.
+    const strategyTables = {
+      aggressive: {
+        label: "Aggressive Expansion",
+        description: "You push for fast growth: hiring, ads, and expansion before stabilizing the foundation.",
+        priorities: ["rook", "queen", "pawn", "bishop", "knight", "king"],
+        misplay: {
+          rook: "You tried to scale before building stable systems. Infrastructure buckled under the pressure.",
+          queen: "Ops was overloaded by promises sales couldn’t safely keep. The system drowned in its own growth.",
+          pawn: "Frontline staff absorbed the chaos. Burnout and turnover followed aggressive targets.",
+          bishop: "You ignored conservative advice in favor of speed. The board lost its strategic brakes.",
+          knight: "You stacked experimental bets on top of weak foundations. The clever shortcut backfired.",
+          king: "Runway was sacrificed for speed. The business sprinted straight into a wall."
+        }
+      },
+      defensive: {
+        label: "Defensive Consolidation",
+        description: "You protect what you have: cutting risk, slowing expansion, and hoarding runway.",
+        priorities: ["knight", "pawn", "bishop", "queen", "rook", "king"],
+        misplay: {
+          knight: "You over-protected the present and starved innovation. The future silently slipped away.",
+          pawn: "In constant defense mode, frontline staff carried all the weight without upside.",
+          bishop: "You stopped listening to progressive strategy and defaulted to fear-based decisions.",
+          queen: "Ops was frozen under ‘no mistakes’ culture — efficiency replaced momentum.",
+          rook: "Systems were never upgraded because change felt risky. Technical debt quietly grew.",
+          king: "By refusing all risk, you let inflation, competition, and time drain your runway anyway."
+        }
+      },
+      speculative: {
+        label: "Speculative Bet",
+        description: "You chase an uncertain upside: new tech, new market, or high-risk partnership.",
+        priorities: ["bishop", "knight", "queen", "pawn", "rook", "king"],
+        misplay: {
+          bishop: "You followed a shiny narrative instead of grounded analysis. Advice became hype.",
+          knight: "You gambled innovation budget on a single moonshot instead of controlled experiments.",
+          queen: "Ops was re-routed to serve the bet, starving the proven core of the business.",
+          pawn: "You tested your wildest ideas directly on your most fragile frontline.",
+          rook: "You duct-taped infrastructure to support the bet instead of designing it soberly.",
+          king: "You quietly bet the runway on a story — and the market didn’t agree."
+        }
+      }
+    };
+
+    let state;
+
+    const pieceGridEl = document.getElementById("pieceGrid");
+    const logEl = document.getElementById("log");
+    const turnLabelEl = document.getElementById("turnLabel");
+    const maxTurnsLabelEl = document.getElementById("maxTurnsLabel");
+    const lostCountLabelEl = document.getElementById("lostCountLabel");
+
+    const btnAggressive = document.getElementById("btnAggressive");
+    const btnDefensive = document.getElementById("btnDefensive");
+    const btnSpeculative = document.getElementById("btnSpeculative");
+    const btnReset = document.getElementById("btnReset");
+
+    const lessonModal = document.getElementById("lessonModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalPieceInfo = document.getElementById("modalPieceInfo");
+    const modalBody = document.getElementById("modalBody");
+    const modalLesson = document.getElementById("modalLesson");
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+    const modalHint = document.getElementById("modalHint");
+    const demoCompleteBlock = document.getElementById("demoCompleteBlock");
+
+    function initState() {
+      state = {
+        turn: 1,
+        maxTurns,
+        pieces: {},
+        lostPieces: [],
+        gameOver: false,
+      };
+
+      piecesConfig.forEach((p) => {
+        state.pieces[p.id] = {
+          ...p,
+          alive: true,
+        };
+      });
+    }
+
+    function renderPieces() {
+      pieceGridEl.innerHTML = "";
+      piecesConfig.forEach((cfg) => {
+        const piece = state.pieces[cfg.id];
+        const pieceEl = document.createElement("div");
+        pieceEl.className = "piece " + (piece.alive ? "alive" : "captured");
+
+        pieceEl.innerHTML = `
+          <div class="piece-row">
+            <div class="piece-icon">${piece.icon}</div>
+            <div style="flex:1; min-width:0;">
+              <div class="piece-name">${piece.name}</div>
+              <div class="piece-role">${piece.role}</div>
+            </div>
+            <div class="piece-tag">${piece.tag}</div>
+          </div>
+          <div class="piece-status">
+            ${
+              piece.alive
+                ? `<span><span class="status-dot"></span> Active on board</span>`
+                : `<span><span class="status-dot"></span> Captured</span>`
+            }
+          </div>
+        `;
+
+        pieceGridEl.appendChild(pieceEl);
+      });
+
+      turnLabelEl.textContent = state.turn;
+      maxTurnsLabelEl.textContent = state.maxTurns;
+      lostCountLabelEl.textContent = state.lostPieces.length;
+    }
+
+    function log(message, options = {}) {
+      const entry = document.createElement("div");
+      entry.className = "log-entry " + (options.danger ? "log-entry-danger" : "");
+      const turnLabel = options.turn != null ? `Turn ${options.turn}` : null;
+
+      entry.innerHTML = `
+        ${
+          turnLabel
+            ? `<span class="turn-label">${turnLabel}</span><br />`
+            : ""
+        }
+        ${message}
+      `;
+
+      logEl.appendChild(entry);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function logIntro() {
+      logEl.innerHTML = "";
+      log(
+        `<strong>Board initialized.</strong> All six pieces are active. 
+        Your job: survive the opening without sacrificing the wrong core.`,
+        { turn: 0 }
+      );
+      log(
+        `Each move you choose triggers an unseen counter-move from the market. 
+        Every capture will show you the pattern that killed that piece.`,
+        { turn: 0 }
+      );
+    }
+
+    function setButtonsEnabled(enabled) {
+      const buttons = [btnAggressive, btnDefensive, btnSpeculative];
+      buttons.forEach((btn) => {
+        if (enabled) {
+          btn.classList.remove("disabled");
+          btn.removeAttribute("disabled");
+        } else {
+          btn.classList.add("disabled");
+          btn.setAttribute("disabled", "true");
+        }
+      });
+    }
+
+    function openModal({ title, icon, pieceName, pieceRole, misplay, lesson, isGameOver, demoSummary }) {
+      modalTitle.innerHTML = `
+        <span>${icon}</span>
+        <span>${title}</span>
+      `;
+      modalPieceInfo.innerHTML = `<strong>${pieceName}</strong> — ${pieceRole}`;
+      modalBody.textContent = misplay;
+      modalLesson.textContent = lesson;
+
+      if (isGameOver) {
+        demoCompleteBlock.style.display = "block";
+        demoCompleteBlock.innerHTML = demoSummary;
+        modalHint.textContent = "Reset the demo board to play another 3–5-move sequence.";
+        modalCloseBtn.textContent = "Close — I’ve logged the lesson";
+      } else {
+        demoCompleteBlock.style.display = "none";
+        modalHint.textContent = "Close this panel to continue the demo. You have limited moves.";
+        modalCloseBtn.textContent = "Understood — back to the board";
+      }
+
+      lessonModal.classList.add("active");
+    }
+
+    function closeModal() {
+      lessonModal.classList.remove("active");
+      if (!state.gameOver) {
+        setButtonsEnabled(true);
+      }
+    }
+
+    function chooseCapture(strategyKey) {
+      const table = strategyTables[strategyKey];
+      if (!table) return null;
+
+      // Filter priorities to only alive pieces
+      const available = table.priorities.filter((id) => state.pieces[id].alive);
+      if (available.length === 0) return null;
+
+      // Randomly pick one alive candidate
+      const targetId = available[Math.floor(Math.random() * available.length)];
+      const piece = state.pieces[targetId];
+
+      const misplay = table.misplay[targetId] || table.description;
+
+      return { piece, misplay, strategyLabel: table.label };
+    }
+
+    function checkGameOver() {
+      // End conditions: max turns reached or King captured
+      const kingAlive = state.pieces.king.alive;
+      const turnsDone = state.turn > state.maxTurns;
+
+      if (!kingAlive || turnsDone) {
+        state.gameOver = true;
+        setButtonsEnabled(false);
+
+        const lostNames = state.lostPieces.map((p) => p.name).join(", ") || "none";
+
+        const kingNote = kingAlive
+          ? "You kept the King alive in this demo."
+          : "Your King fell — runway and leadership were compromised.";
+
+        const summaryHTML = `
+          <strong>Demo complete.</strong><br />
+          Lost pieces: ${lostNames || "none"}<br />
+          ${kingNote}
+        `;
+
+        return { isGameOver: true, summaryHTML };
+      }
+
+      return { isGameOver: false, summaryHTML: "" };
+    }
+
+    function handleStrategyClick(strategyKey) {
+      if (state.gameOver) return;
+
+      const table = strategyTables[strategyKey];
+      if (!table) return;
+
+      const { label, description } = table;
+
+      log(
+        `<strong>${label}</strong> — ${description}`,
+        { turn: state.turn }
+      );
+
+      // Temporarily prevent double clicks until resolution
+      setButtonsEnabled(false);
+
+      // Decide which piece is captured by this choice
+      const outcome = chooseCapture(strategyKey);
+
+      if (!outcome) {
+        // No pieces left somehow
+        log(
+          "No more pieces available to capture — the board is effectively empty.",
+          { danger: true }
+        );
+        state.gameOver = true;
+        setButtonsEnabled(false);
+        return;
+      }
+
+      const { piece, misplay, strategyLabel } = outcome;
+
+      // If piece is already in lostPieces, skip (defensive; should not happen)
+      if (!piece.alive) {
+        setButtonsEnabled(true);
+        return;
+      }
+
+      // Mark piece as captured
+      piece.alive = false;
+      state.lostPieces.push(piece);
+
+      renderPieces();
+
+      log(
+        `<strong>${piece.name} captured.</strong> (${piece.role}) — caused by <em>${strategyLabel}</em>.`,
+        { danger: true, turn: state.turn }
+      );
+
+      // Check if game over now (after capture)
+      const gameStatus = checkGameOver();
+
+      // Open modal with lesson
+      openModal({
+        title: piece.name + " has been removed from the board",
+        icon: piece.icon,
+        pieceName: piece.name,
+        pieceRole: piece.role,
+        misplay,
+        lesson: piece.lesson,
+        isGameOver: gameStatus.isGameOver,
+        demoSummary: gameStatus.summaryHTML
+      });
+
+      // Advance turn counter if not already beyond max
+      if (state.turn <= state.maxTurns) {
+        state.turn += 1;
+        turnLabelEl.textContent = state.turn;
+      }
+    }
+
+    function resetDemo() {
+      initState();
+      renderPieces();
+      logIntro();
+      setButtonsEnabled(true);
+    }
+
+    // -------------------
+    // EVENT BINDINGS
+    // -------------------
+
+    btnAggressive.addEventListener("click", () => handleStrategyClick("aggressive"));
+    btnDefensive.addEventListener("click", () => handleStrategyClick("defensive"));
+    btnSpeculative.addEventListener("click", () => handleStrategyClick("speculative"));
+    btnReset.addEventListener("click", resetDemo);
+
+    modalCloseBtn.addEventListener("click", closeModal);
+    lessonModal.addEventListener("click", (e) => {
+      if (e.target === lessonModal) {
+        closeModal();
+      }
+    });
+
+    // ---- INIT ----
+    initState();
+    renderPieces();
+    logIntro();
+  </script>
+</body>
+</html>
