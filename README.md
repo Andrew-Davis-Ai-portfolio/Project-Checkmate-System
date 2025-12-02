@@ -250,10 +250,24 @@ If not — iterate and improve.
 > He validates those that survive.**
 
 ---
+
 ## 🤝 Contributions
 
 Have ideas to improve the system? PRs and suggestions are welcome.
 Let’s make Failure the greatest teacher — together.
+
+---
+
+## Legal & Usage Notice
+
+Project Checkmate System is an original strategic simulation framework.
+
+© 2025 Andrew Davis. All rights reserved.
+
+This repository is released under the MIT License for educational and demonstration purposes.
+Commercial use, derivatives, or deployments beyond demonstration require explicit permission from the author.
+
+This project does not constitute financial, legal, or business advice.
 
 ---
 
